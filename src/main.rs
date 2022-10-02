@@ -1,7 +1,7 @@
 use std::fmt;
 use std::ops::Add;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 struct Date {
     days: i32,
 }
@@ -9,21 +9,62 @@ struct Date {
 impl Date {
     // create Date from year/month/day triple
     fn from_ymd(year: i32, month: i32, day: i32) -> Date {
-        return Date { days: 0 };
+        let x : i32 = if is_leapyear(year) { 29 } else { 28 };
+        let month_days: [i32; 12] = [31, x, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        let mut days_count: i32 = 0;
+
+        if year >= 0 {
+            for i in 0..(year) {
+                if is_leapyear(i) {
+                    days_count += 366;
+                } else {
+                    days_count += 365
+                }
+            }
+            for i in 0..(month - 1) {
+                days_count += month_days[i as usize];
+            }
+
+            days_count += day - 1;
+        } else {
+            for i in year..0 {
+                if is_leapyear(i*-1) {
+                    days_count += 366;
+                } else {
+                    days_count += 365
+                }
+            }
+            for i in (month - 1) ..0 {
+                days_count += month_days[i as usize];
+            }
+
+            days_count += month_days[(month-1) as usize ] - day;
+        }
+        return Date { days: days_count };
     }
     // convert back to year/month/day triple
     fn ymd(&self) -> (i32, i32, i32) {
         return (0, 0, 0);
     }
 }
+fn is_leapyear(year: i32) -> bool {
+    return if year % 400 == 0 {
+        true
+    } else if year % 100 == 0 {
+        false
+    } else if year % 4 == 0 {
+        true
+    } else {
+        false
+    };
+}
 
+impl Add<i32> for Date {
+    type Output = Self;
 
-impl Add for Date {
-    type Output = Date;
-
-    fn add(self, other: Date) -> Date {
-        Date {
-            days: self.days + other.days
+    fn add(self, to_add: i32) -> Self {
+        Self {
+            days: self.days + to_add
         }
     }
 }
@@ -51,7 +92,7 @@ fn main() {
     for i in 0..20 {
         // first iteration should print 2/12/31 BC
 
-        println!("{}", (date.days + i * 30)); // added date.days + i * 30 instead of date + i * 30
+        println!("{}", date + i * 30);
     }
 }
 
