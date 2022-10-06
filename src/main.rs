@@ -115,10 +115,10 @@ impl Add<i32> for Date {
 
 impl fmt::Display for Date {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if Date::ymd(&self).0 < 0 {
-            write!(f, "{}/{}/{} BC", (Date::ymd(&self).0 * -1), Date::ymd(&self).1, Date::ymd(&self).2)
+        if Date::ymd(&self).0 <= 0 {
+            write!(f, "{}/{}/{} BC", (Date::ymd(&self).0 * -1) + 1, Date::ymd(&self).1, Date::ymd(&self).2)
         } else {
-            write!(f, "{}/{}/{} ", Date::ymd(&self).0, Date::ymd(&self).1, Date::ymd(&self).2)
+            write!(f, "{}/{}/{} ", Date::ymd(&self).0 , Date::ymd(&self).1, Date::ymd(&self).2)
         }
     }
 }
@@ -129,7 +129,7 @@ fn main() {
     println!("{:?}", Date::from_ymd(2022, 12, 31));
 
     // testing Add and Display
-    let date = Date::from_ymd(-2, 12, 31);
+    let date = Date::from_ymd(-1, 12, 31);
 
     // increase date by 30 days, 60 days, etc.
     for i in 0..20 {
