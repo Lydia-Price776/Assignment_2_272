@@ -62,7 +62,7 @@ impl Date {
             }
             day += days_count;
 
-        //Accounts for Negative days/BC dates
+            //Accounts for Negative days/BC dates
         } else {
             year = -1;
             days_count *= -1;
@@ -85,7 +85,7 @@ impl Date {
 }
 
 //Returns an array of the number of days in each month dependent on year
-fn set_month_days(year:i32) -> [i32; 12] {
+fn set_month_days(year: i32) -> [i32; 12] {
     let x: i32 = if is_leap_year(year) { 29 } else { 28 };
     let month_days: [i32; 12] = [31, x, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     month_days
